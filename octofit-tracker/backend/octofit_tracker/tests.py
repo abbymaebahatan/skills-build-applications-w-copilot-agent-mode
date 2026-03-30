@@ -1,14 +1,32 @@
-from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APITestCase
+from django.test import TestCase
+from rest_framework.test import APIClient
 from .models import User, Team, Activity, Leaderboard, Workout
 
-class UserTests(APITestCase):
-    def test_create_user(self):
-        team = Team.objects.create(name='Test Team')
-        url = reverse('user-list')
-        data = {'name': 'Test User', 'email': 'test@example.com', 'team': team.id}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+class APITestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        User.objects.create(name='Test User', email='test@example.com', team='marvel')
+        Team.objects.create(name='marvel', members=['test@example.com'])
+        Activity.objects.create(user_email='test@example.com', activity='Running', duration=10)
+        Leaderboard.objects.create(team='marvel', points=10)
+        Workout.objects.create(name='HIIT', suggested_for='marvel')
 
-# Add similar tests for Team, Activity, Workout, Leaderboard
+    def test_users_endpoint(self):
+        response = self.client.get('/api/users/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_teams_endpoint(self):
+        response = self.client.get('/api/teams/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_activities_endpoint(self):
+        response = self.client.get('/api/activities/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_leaderboard_endpoint(self):
+        response = self.client.get('/api/leaderboard/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_workouts_endpoint(self):
+        response = self.client.get('/api/workouts/')
+        self.assertEqual(response.status_code, 200)

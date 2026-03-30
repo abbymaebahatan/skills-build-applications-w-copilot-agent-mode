@@ -1,41 +1,33 @@
 from djongo import models
 
-class Team(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    def __str__(self):
-        return self.name
-
 class User(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    team = models.ForeignKey('Team', on_delete=models.CASCADE)
+    team = models.CharField(max_length=50)
+    def __str__(self):
+        return self.name
+
+class Team(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    members = models.JSONField(default=list)
     def __str__(self):
         return self.name
 
 class Activity(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    type = models.CharField(max_length=50)
+    user_email = models.EmailField()
+    activity = models.CharField(max_length=100)
     duration = models.IntegerField()
-    calories = models.IntegerField()
     def __str__(self):
-        return f"{self.type} - {self.user.name}"
+        return f"{self.user_email} - {self.activity}"
+
+class Leaderboard(models.Model):
+    team = models.CharField(max_length=50)
+    points = models.IntegerField()
+    def __str__(self):
+        return f"{self.team}: {self.points}"
 
 class Workout(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    suggested_for = models.CharField(max_length=50)
     def __str__(self):
         return self.name
-
-class Leaderboard(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    score = models.IntegerField()
-    def __str__(self):
-        return f"{self.user.name}: {self.score}"
-
-# Register models for admin
-from django.contrib import admin
-admin.site.register(Team)
-admin.site.register(User)
-admin.site.register(Activity)
-admin.site.register(Workout)
-admin.site.register(Leaderboard)

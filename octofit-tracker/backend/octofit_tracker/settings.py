@@ -15,18 +15,23 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- Forced reload: Move DATABASES and INSTALLED_APPS to top ---
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'octofit_db',
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': 'mongodb://localhost:27017',
-        },
-    }
-}
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-iadm*+s^hzy_(#-^-)7_5+)5aog-57ux2@+=wsgi(kpjfp1#u1'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+
+# Allow all hosts
+ALLOWED_HOSTS = ['*']
+
+
+# Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,25 +46,12 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3=^r3u7c3v^jn^g)h87wvya&___y1!v*(1$5%f=-uq(26ua2(2'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-# Allow all hosts
-ALLOWED_HOSTS = ['*']
-
-# Application definition
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -89,8 +81,7 @@ WSGI_APPLICATION = 'octofit_tracker.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+# Use Djongo to connect to MongoDB
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
@@ -98,9 +89,15 @@ DATABASES = {
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
             'host': 'mongodb://localhost:27017',
-        },
+        }
     }
 }
+
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ['*']
+CORS_ALLOW_METHODS = ['*']
 
 
 # Password validation
@@ -135,16 +132,9 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
-# CORS settings
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ['*']
-CORS_ALLOW_METHODS = ['*']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
